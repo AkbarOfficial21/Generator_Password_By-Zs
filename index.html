@@ -1,0 +1,181 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Generator Password</title>
+    <style>
+        @keyframes gradientAnimation {
+            0% { background-position: 0% 50%; }
+            50% { background-position: 100% 50%; }
+            100% { background-position: 0% 50%; }
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            background: linear-gradient(270deg, #ff6b6b, #6b6bff, #6bff6b);
+            background-size: 400% 400%;
+            animation: gradientAnimation 10s ease infinite;
+        }
+        
+        form {
+            text-align: left;
+            display: inline-block;
+            background: rgb(255 255 255 / 43%);
+            padding: 20px;
+            border-radius: 10px;
+            box-shadow: 2px 2px 10px rgba(0, 0, 0, 0.1);
+            width: 100%;
+            max-width: 600px;
+        }
+    
+        input, select, button {
+            margin: 5px;
+            padding: 7px;
+            display: block;
+            border-radius: 5px;
+            border: 1px solid #5b9bd5;
+            width: 95%;
+        }
+        button {
+            background: #5b9bd5;
+            color: white;
+            cursor: pointer;
+            padding: 5px 10px;
+            width: auto;
+            margin-top: -9px;
+        }
+        button:hover {
+            background: #4a8ac4;
+        }
+        #passwordContainer {
+            margin-top: 10px;
+            margin-left: 4px;
+            height: 30px;
+            background: white;
+            display: inline-block;
+            border-radius: 5px;
+            border: 1px solid #5b9bd5;
+            width: 100%;
+            max-width: 583px;
+        }
+        #passwordResult {
+            font-weight: bold;
+            word-break: break-all;
+            padding: 10px;
+            display: inline-block;
+            width: calc(100% - 100px);
+            text-align: left;
+            margin-top: -3px;
+            z-index: inherit;
+        }
+        #copyButton {
+            background: #5b9bd5;
+            color: white;
+            cursor: pointer;
+            padding: 5px 10px;
+            border: none;
+            /* border-radius: 5px; */
+            margin-top: -4px;
+            display: inline-block;
+            width: 76px;
+            /* z-index: 50; */
+        }
+        #copyButton:hover {
+            background: #4a8ac4;
+        }
+        .passwordWrapper {
+            display: flex;
+            align-items: center;
+            justify-content: space-between;
+        }
+        .difficulty-container {
+            margin-bottom: 20px;
+        }
+        .label-difficulty {
+            font-weight: bold;
+            margin-bottom: 5px;
+            font-size: 16px;
+            color: #333;
+            display: block;
+        }
+        .select-difficulty {
+            padding: 7px;
+            margin-bottom: -13px;
+            border-radius: 5px;
+            border: 1px solid #5b9bd5;
+            width: 98%;
+            font-size: 14px;
+        }
+        .button-container {
+            display: flex;
+            justify-content: center;
+            margin-top: 20px;
+        }
+    </style>
+</head>
+<body>
+    <h2>Generator Password</h2>
+    <form>
+        <div class="difficulty-container">
+            <label for="difficulty" class="label-difficulty">Tingkat Kesulitan:</label>
+            <select id="difficulty" class="select-difficulty">
+                <option value="easy">Mudah</option>
+                <option value="medium">Sedang</option>
+                <option value="hard">Sulit</option>
+            </select>
+        </div>        
+        <label for="length">Panjang Karakter (4-50):</label>
+        <input type="number" id="length" min="4" max="50" value="12">
+        <label for="prefix">Tambahkan di Awal (Opsional):</label>
+        <input type="text" id="prefix">
+        <label for="suffix">Tambahkan di Akhir (Opsional):</label>
+        <input type="text" id="suffix">
+        <div id="passwordContainer">
+            <div class="passwordWrapper">
+                <p id="passwordResult"></p>
+            </div>
+        </div>
+        <div class="button-container">
+            <button id="copyButton" onclick="copyPassword()">Copy</button>
+        </div>
+        <div class="button-container">
+            <button type="button" onclick="generatePassword()">Generate Password</button>
+        </div>
+    </form>
+    
+    <script>
+        function generatePassword() {
+            const length = parseInt(document.getElementById('length').value);
+            const difficulty = document.getElementById('difficulty').value;
+            const prefix = document.getElementById('prefix').value;
+            const suffix = document.getElementById('suffix').value;
+
+            let chars = '';
+            if (difficulty === 'easy') {
+                chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789';
+            } else if (difficulty === 'medium') {
+                chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*';
+            } else {
+                chars = 'abcdefghijklmnopqrstuvwxyzABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#$%^&*()_+{}[]<>?~';
+            }
+
+            let password = '';
+            for (let i = 0; i < length; i++) {
+                password += chars.charAt(Math.floor(Math.random() * chars.length));
+            }
+
+            document.getElementById('passwordResult').innerText = prefix + password + suffix;
+            document.getElementById('passwordContainer').style.visibility = 'visible'; // Menampilkan password jika sudah digenerate
+        }
+
+        function copyPassword() {
+            const passwordText = document.getElementById('passwordResult').innerText;
+            navigator.clipboard.writeText(passwordText).then(() => {
+                alert('Password disalin ke clipboard!');
+            });
+        }
+    </script>
+</body>
+</html>
